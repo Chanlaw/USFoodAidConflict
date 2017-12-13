@@ -1,0 +1,115 @@
+%Style Section
+\documentclass{article}
+\usepackage{latexsym, amsmath, amssymb, enumitem}
+\usepackage{hyperref}
+\usepackage{tikz}
+\usepackage{bussproofs}
+\usepackage{graphicx}
+\graphicspath{ {/} }
+%\usepackage[dvips]{graphicx}
+\usepackage[left=2.5cm,right=2.5cm,top=2.5cm,bottom=2.5cm]{geometry}
+
+%Declaration Section
+\newtheorem{Corollary}{Corollary}
+\newtheorem{Proposition}{Proposition}
+\newtheorem{Lemma}{Lemma}
+\newtheorem{Definition}{Definition}
+\newtheorem{Theorem}{Theorem}
+\newtheorem{Example}{Example}
+
+%Command Section
+%\errorcontextlines=0
+%\numberwithin{equation}{equation}
+
+\newcommand{\R}{{\mathbb R}}
+\newcommand{\C}{{\mathbb C}}
+\newcommand{\N}{{\mathbb N}}
+\newcommand{\Q}{{\mathbb Q}}
+\newcommand{\Z}{{\mathbb Z}}
+\newcommand{\re}{\textrm{re}}
+\newcommand{\im}{\textrm{im}}
+\newcommand{\Stab}{\textrm{Stab}}
+\newcommand{\Var}{\textrm{Var}}
+\newcommand{\Int}{\textrm{Int}}
+\newcommand{\Bd}{\textrm{Bd}}
+\newcommand{\br}{\mathbf r}
+\newcommand{\g}{\mathbf g}
+\newcommand{\h}{\mathbf h}
+\newcommand{\w}{\mathbf w}
+\newcommand{\X}{\mathbf X}
+\newcommand{\x}{\mathbf x}
+\newcommand{\z}{\mathbf z}
+\newcommand{\bbeta}{\boldsymbol{\beta}}
+
+%Special for Tests
+\newcounter{Task}
+\setcounter{Task}{1}
+\newenvironment{Task}
+{\medskip \noindent{\bf Task \theTask.}\addtocounter{Task}{1}}
+%{\smallskip}
+
+\title{Estimating the effect of US Food Aid on Civil Conflict}
+\author{Lawrence Chan}
+\date{December 11th, 2017}
+
+\begin{document}
+\maketitle
+\begin{abstract}
+We duplicate the results of Nunn and Qian, who use lagged wheat production as an instrument for US food aid to conclude that US food aid increases the chance of civil (intrastate) conflict. In addition, we test for heteroscedasticity, and find that their assumption of homoscedasticity for reporting $p$-values is valid. Finally, we test for endogeneity and the validity of the overidentification assumption in their two-stage least squares regression, and find evidence of endogenous variables in their OLS regression and no evidence that the overidentifying assumption is invalid. This offers additional support for the validity of their 2SLS model and their results. 
+\end{abstract}
+\section{Introduction}
+There has been much debate about the effects of food aid from developed countries toward the developing world. Nunn and Qian’s 2014 Paper, “US Food Aid and Civil Conflict”, uses a 2SLS regression (using shocks in the US agricultural market as an instrument to aid) and several robustness checks to conclude that US food aid increases the incidence and duration of civil conflicts.\\
+
+In this work, we duplicate their analysis (with minor differences in control variables) and then perform additional tests for heteroscedasiticity, endogeniety, and underidentification. \footnote{Our code and data are available } We find no evidence for any of these, providing more support for the validity of their results. 
+
+\section{Description of Dataset and Preliminary Analysis}
+Before jumping in to the discussion of Nunn and Qian's main results, we describe the datasets being used and provide some preliminary analysis.\\
+
+The two main datasets are the UCDP/PRIO Armed Conflict Dataset and Food and Agriculture Organization’s (FAO) FAOSTAT database. The dependent variables include the prevalence of war, defined as any armed conflict leading to more than 25 deaths, as well as civil and interstate war. The authors use US wheat aid as a proxy for US food aid, and wheat production from the previous year as an instrument for . We used the merged data set provided by the authors\footnote{Available at the AER website here: \href{https://www.aeaweb.org/articles?id=10.1257/aer.104.6.1630}{https://www.aeaweb.org/articles?id=10.1257/aer.104.6.1630}}, which contains 4089 observations across 125 OECD countries over the period of 36 years from 1971 to 2006. (The actual dataset contains quite a few more rows, as their US wheat production data goes back further, to 1950.) \\
+
+Summary statistics for the key variables are provide in table \ref{summary}. Some of the results provided are different than those reported in Nunn and Qian's paper, as we report all observations in the dataset and not just those included in our final regression. Any conflict is an indicator variable for whether or not there has been a reported violent conflict with 25+ deaths during that year in that country, while the intrastate and interstate conflict variables are indicators for reported conflicts with 25+ deaths between the government and one or more rebel groups and between two states, respectively. Note that there are conflicts that do not fall into either category. The wheat aid and lagged US wheat production variables are reported in thousands of metric tonnes. 
+\begin{table}[t]
+\centering
+\begin{tabular}{| l | c | c | c | c | c | c | }
+\hline
+Variable & Observations & Min & Max & Median & Mean & Standard Deviation\\
+\hline
+Any Conflict & 5663 & 0 & 1 & 0 & 0.1898 & 0.3922 \\
+Intrastate Conflict & 5663 & 0 & 1 & 0 & 0.1508 & 0.3579\\
+Interstate Conflict & 5663 & 0 & 1 & 0 & 0.0267 & 0.1611\\
+\hline
+US Wheat Aid (1000's of MT) & 4389 & 0 & 1958 & 0 & 26.35 & 114.00\\
+Lagged US Wheat Production (1000's of MT) & 7112 & 25506 & 75813   & 51166 & 49529 & 14840.85\\
+Received US Wheat Aid in Given Year &4389 &  0 & 1 & 0 & 0.3615 & 0.4805\\
+\hline 
+\end{tabular}
+\label{summary}
+\caption{Summary statistics for the main variables of interest in the analysis. }
+\end{table}
+
+Before duplicating the analysis performed in the paper, we begin by examining the main results graphically in 
+
+\begin{figure}
+\label{}
+\end{figure}
+ 
+\section{Duplication of Regression Results}
+\subsection{OLS}
+We start by performing an OLS regression with model
+\[C_{it} = \beta F_{it} + \x_{it} \gamma +  \delta_r t + \psi_{i} + \nu_{it}, \]
+where $C_{it}$ is an indicator for the presence of conflict in country $i$ during year $t$, $F_{it}$ is the quantity of wheat aid shipped from the US to that country during that year, $\x_{it}$ is a length $K$ vector of containing information about the country during that year, $\delta_r t$ denotes region specific time trends for the region $r$ the country is in, and $\psi_{i}$ denotes country specific effects. In total, as there are 125 countries in six regions in the dataset, there are $132+K$ variables to estimate. \\
+
+, we consider 
+\subsection{2SLS }
+In addition to the model above, we also perform a 2SLS regression with US wheat production during the previous year as an instrument for food aid. The model used is:
+\begin{align*}
+F_{it} &= \alpha P_{t-1} +  \x_{it} \gamma +  \delta_r t + \psi_{i} + \epsilon_{it}\\
+C_{it} &= \beta  F_{it} + \x_{it} \gamma +  \delta_r t + \psi_{i} + \nu_{it}
+\end{align*}
+Where $P_{t-1}$ is the US production of wheat in the preceding year. 
+\section{Testing for Heteroscedasticity}
+\section{Testing for Endogeneity and Overidentification Assumption}
+\section{Conclusion and Further Work}
+
+\section*{\\Apendix A}
+\end{document}

@@ -1,0 +1,28 @@
+{
+    "collab_server" : "",
+    "contents" : "",
+    "created" : 1513129729221.000,
+    "dirty" : false,
+    "encoding" : "",
+    "folds" : "",
+    "hash" : "0",
+    "id" : "DBD10643",
+    "lastKnownWriteTime" : 3328006618200670214,
+    "last_content_update" : 1513129729221,
+    "path" : null,
+    "project_path" : null,
+    "properties" : {
+        "cacheKey" : "og64ngpvt1",
+        "caption" : "data",
+        "contentUrl" : "grid_resource/gridviewer.html?env=&obj=data&cache_key=og64ngpvt1",
+        "displayedObservations" : 7239,
+        "environment" : "",
+        "object" : "data",
+        "totalObservations" : 7239,
+        "variables" : 106
+    },
+    "relative_order" : 2,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_dataframe"
+}
