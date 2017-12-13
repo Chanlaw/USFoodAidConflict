@@ -60,7 +60,7 @@ We duplicate the results of Nunn and Qian, who use lagged wheat production as an
 \section{Introduction}
 There has been much debate about the effects of food aid from developed countries toward the developing world. Nunn and Qian’s 2014 Paper, “US Food Aid and Civil Conflict”, uses a 2SLS regression (using shocks in the US agricultural market as an instrument to aid) and several robustness checks to conclude that US food aid increases the incidence and duration of civil conflicts.\\
 
-In this work, we duplicate their analysis (with minor differences in control variables) and then perform additional tests for heteroscedasiticity, endogeniety, and underidentification. \footnote{Our code and data are available } We find no evidence for any of these, providing more support for the validity of their results. 
+In this work, we duplicate their analysis (with minor differences in control variables) and then perform additional tests for heteroscedasiticity, endogeniety, and underidentification. \footnote{Our code is available online at \href{https://github.com/chanlaw/USFoodAidConflict}{https://github.com/chanlaw/USFoodAidConflict}} We find no evidence for either underidentification and heteroscedasiticty, but do find evidence for US wheat aid being endogenous, providing more support for the validity of their results and methodology.
 
 \section{Description of Dataset and Preliminary Analysis}
 Before jumping in to the discussion of Nunn and Qian's main results, we describe the datasets being used and provide some preliminary analysis.\\
@@ -72,7 +72,7 @@ Summary statistics for the key variables are provide in table \ref{summary}. Som
 \centering
 \begin{tabular}{| l | c | c | c | c | c | c | }
 \hline
-Variable & Observations & Min & Max & Median & Mean & Standard Deviation\\
+Variable & Observations & Min & Max & Median & Mean & Std. Dev.\\
 \hline
 Any Conflict & 5663 & 0 & 1 & 0 & 0.1898 & 0.3922 \\
 Intrastate Conflict & 5663 & 0 & 1 & 0 & 0.1508 & 0.3579\\
@@ -87,26 +87,127 @@ Received US Wheat Aid in Given Year &4389 &  0 & 1 & 0 & 0.3615 & 0.4805\\
 \caption{Summary statistics for the main variables of interest in the analysis. }
 \end{table}
 
-Before duplicating the analysis performed in the paper, we begin by examining the main results graphically in 
+Before duplicating the analysis performed in the paper, we begin by examining the main results graphically. \\
+
+Firstly, though the distribution of US food aid varies by year, existing research suggests a strong link between the total quantity of US wheat aid and US wheat production in the previous year. By examining the scatter plot of these two quantities, we can see that this relationship is also born out in our dataset, as displayed in figure \ref{wheataidprod}.\\
+
 
 \begin{figure}
-\label{}
+\centering
+\includegraphics[scale=0.5]{wheatAidvsProd}
+\label{wheataidprod}
+\caption{Total US Wheat Aid vs Lagged US Wheat Production by year}
 \end{figure}
  
+The conclusion of the analysis in Nunn and Qian can be interpreted as US wheat production influences the incidence of conflict in countries in the subsequent year through food aid. Indeed, we can see this relationship directly in figure \ref{warwheatprod} the total frequency of conflict in all countries in our dataset against lagged US wheat production. 
+
+\begin{figure}
+\centering
+\includegraphics[scale=0.5]{warvsWheatProd}
+\label{warwheatprod}
+\caption{Frequency of War vs Lagged Wheat Production by Year}
+\end{figure}
+
 \section{Duplication of Regression Results}
+We now proceed with our duplication of the main results of Nunn and Qian. 
 \subsection{OLS}
 We start by performing an OLS regression with model
-\[C_{it} = \beta F_{it} + \x_{it} \gamma +  \delta_r t + \psi_{i} + \nu_{it}, \]
-where $C_{it}$ is an indicator for the presence of conflict in country $i$ during year $t$, $F_{it}$ is the quantity of wheat aid shipped from the US to that country during that year, $\x_{it}$ is a length $K$ vector of containing information about the country during that year, $\delta_r t$ denotes region specific time trends for the region $r$ the country is in, and $\psi_{i}$ denotes country specific effects. In total, as there are 125 countries in six regions in the dataset, there are $132+K$ variables to estimate. \\
+\[C_{it} = \beta F_{it} \times \bar D_{i} + \x_{it} \gamma +  \delta_r t + \psi_{i} + \nu_{it}, \]
+where $C_{it}$ is an indicator for the presence of conflict in country $i$ during year $t$, $F_{it}$ is the quantity of wheat aid shipped from the US to that country during that year, $\bar D_{i}$ is the average frequency of US provided aid to the country, $\x_{it}$ is a length $K$ vector of containing information about the country during that year, $\delta_r t$ denotes region specific time trends for the region $r$ the country is in (the region-year fixed effect), and $\psi_{i}$ denotes country specific effects. In total, as there are 125 countries in six regions in the dataset.\\
 
-, we consider 
+The we use five sets of $\x_{it}$, based on five sets of concerns raised by the authors:
+\begin{enumerate}
+\item[(1)] The baseline model where $\x_{it}$ is empty. The only controls in this model are fixed effects for countries and regions as well as regional trends. We will call this model 1. 
+\item[(2)] There is concern about US wheat production and food aid being correlated with US economic cycles, US political cycles, and the oil price shocks during the 1970s, all three of which may influence the incidence of conflict in other countries. As a result, the authors add to model 1 indicators for each of these three variables, as well as their interaction with $\bar D_{i}$: US real per capita GDP, real oil prices, and an indicator that equals one in years that the US president is a Democrat. We will call this model 2. 
+\item[(3)] The authors also raise concerns that weather conditions that impact US food aid are correlated with weather conditions in the recipient countries, which in turn may directly impact the incidence of conflict. As a result, they add in the average monthly temperature and monthly precipitation in the recipient country, as well as their interaction terms with $\bar D_{i}$, to control for these effects, totaling 48 additional terms. We add these terms to model 2 to obtain model 3. 
+\item[(4)] The authors then raise concerns about the countries who are regular recipients of US food aid (that is, with higher values of $\bar D_{i}$) may differ from other countries in ways that relate to the risk of military conflict. In particular, the authors note that countries who receive more US food aid also tend to receive more of both US military aid and other economic aid from the US. These effects may not be adequately controlled for by the country-level fixed effects, as US military and economic aid may vary over time. As a result, the authors choose to also include  interaction of year fixed effects with (i) the average annual amount of per capita US military aid received by a country during the sample period and (ii) the average annual per capita amount of other forms of US economic aid (net of food aid). However, we were confused by this choice, both because none of the other terms involving the recipient country in the regression are per capita, and because it seems more sensible to include the amount of US military aid and US economic aid (net food aid) received by a country in the given year instead. As a result, we add the total amount of US military and US economic aid (net food aid) to model 3 to obtain model 4. 
+\item[(5)] Finally, the authors note that US wheat production can affect international wheat prices, which may, in turn, affect conflict. As a result, the authors include the interaction of year fixed effects with a country’s (i) average per capita net imports of cereals over the sample period and (ii) average per capita production of cereals. We added these terms to model 4 to obtain model 5. 
+\end{enumerate}
+Finally, like the authors, we also consider the affects of food aid on only civil conflicts or interstate conflicts. We replace the dependent variable in model 5 with an indicator for civil conflicts and an indicator for interstate conflicts to obtain (6) model 6 and (7) model 7. 
+
+The results for our OLS regressions are given in table \ref{ols}. Interestingly, some of the values we got were very slightly different from the authors', likely due to small differences in the regression setup and a slightly different choice of controls in models 4, 5, 6, and 7.  Notably, we find a very small but barely significant negative effect of wheat aid on all conflict, and an even smaller but much more significant negative effect of wheat aid on interstate conflict. 
+\begin{table}
+\centering
+\scriptsize
+\begin{tabular}{| l | c | c | c | c | c | c | c |}
+\hline
+& Model 1 & Model 2 & Model 3 & Model 4 & Model 5 & Model 6 & Model 7\\
+\hline
+Dependent Variable & All Conflict &  All Conflict &  All Conflict &  All Conflict & All Conflict & Intrastate & Interstate \\
+\hline 
+US Wheat Aid (1000 MT) & -0.00006 & -0.00007  & -0.00005  & -0.00008  & -0.00012  & 0.00002  & -0.00009 \\
+~~p-value & (0.269) & (0.199) & (0.378) & (0.141) & (0.042) & (0.742) & (0.00092)\\
+$R^2$ & 0.51 & 0.51 & 0.519 & 0.5203 & 0.535 & 0.509 & 0.365  \\
+\hline
+Controls:\\
+~~Country FE & Yes & Yes & Yes & Yes & Yes & Yes & Yes \\
+~~Region-year FE & Yes & Yes & Yes & Yes & Yes & Yes & Yes \\
+~~US GDP per capita$\times \bar D_{it}$  & No & Yes & Yes & Yes & Yes & Yes & Yes \\
+~~Dem. President $\times \bar D_{it}$ & No & Yes & Yes & Yes & Yes & Yes & Yes \\
+~~Oil Price $\times \bar D_{it}$ & No & Yes & Yes & Yes & Yes & Yes & Yes \\
+~~Temp. and Percipitation & No & No & Yes & Yes & Yes & Yes & Yes \\
+~~Temp. and Percip. $\times \bar D_{it}$& No & No & Yes & Yes & Yes & Yes & Yes \\
+~~Total US military aid  & No & No & No & Yes & Yes & Yes & Yes \\
+~~Total US econ. aid & No & No & No & Yes & Yes & Yes & Yes \\
+~~Avg. cereal imports $\times$ year FE & No & No & No & No & Yes & Yes & Yes \\
+~~Avg. cereal prod. $\times$ year FE & No & No & No & No & Yes & Yes & Yes \\
+\hline
+\end{tabular}
+\label{ols}
+\normalsize
+\caption{OLS estimates of the 
+effect of food aid on conflict under different models. p-values are provided in parentheses.}
+\end{table}
 \subsection{2SLS }
 In addition to the model above, we also perform a 2SLS regression with US wheat production during the previous year as an instrument for food aid. The model used is:
 \begin{align*}
-F_{it} &= \alpha P_{t-1} +  \x_{it} \gamma +  \delta_r t + \psi_{i} + \epsilon_{it}\\
-C_{it} &= \beta  F_{it} + \x_{it} \gamma +  \delta_r t + \psi_{i} + \nu_{it}
+F_{it} &= \alpha P_{t-1}\times \bar D_{i} +  \x_{it} \gamma +  \delta_r t + \psi_{i} + \epsilon_{it}\\
+C_{it} &= \beta  F_{it} \times \bar D_{i}+ \x_{it} \gamma +  \delta_r t + \psi_{i} + \nu_{it}
 \end{align*}
-Where $P_{t-1}$ is the US production of wheat in the preceding year. 
+Where $P_{t-1}\times \bar D_{i}$ is the US production of wheat in the preceding year, times the frequency the country receives food aid from the US. We use the same five sets of $\x_{it}$ as in the 2SLS. In addition, we will also consider the effects on intrastate and interstate conflicts, using the final, most inclusive set of controls. As before, we will label our models 1 through 7. \\
+
+We report the results of the first and second stage regressions in table 
+
+\begin{table}
+\centering
+\scriptsize
+\begin{tabular}{| l | c | c | c | c | c | c | c |}
+\hline
+& Model 1 & Model 2 & Model 3 & Model 4 & Model 5 & Model 6 & Model 7\\
+\hline
+Dependent Variable (first stage) & \multicolumn{7}{|c|}{US Wheat Aid (1000 MT)}\\
+\hline 
+US Wheat Aid (1000 MT) & -0.00006 & -0.00007  & -0.00005  & -0.00008  & -0.00012  & 0.00002  & -0.00009 \\
+~~p-value & (0.269) & (0.199) & (0.378) & (0.141) & (0.042) & (0.742) & (0.00092)\\
+$R^2$ & 0.51 & 0.51 & 0.519 & 0.5203 & 0.535 & 0.509 & 0.365  \\
+\hline
+Dependent Variable (second stage) & All Conflict &  All Conflict &  All Conflict &  All Conflict & All Conflict & Intrastate & Interstate \\
+\hline 
+Lagged US Wheat Prod (1000 MT) & -0.0026 & -0.0033  & -0.0335  & -0.00008  & -0.00012  & 0.00002  & -0.00009 \\
+$ $
+~~p-value & (0.000003) & (0.000009) & (0.378) & (0.141) & (0.042) & (0.742) & (0.00092)\\
+$R^2$ & 0.511 & 0.519 & 0.519 & 0.5203 & 0.535 & 0.509 & 0.365  \\
+\hline
+Controls:\\
+~~Country FE & Yes & Yes & Yes & Yes & Yes & Yes & Yes \\
+~~Region-year FE & Yes & Yes & Yes & Yes & Yes & Yes & Yes \\
+~~US GDP per capita$\times \bar D_{it}$  & No & Yes & Yes & Yes & Yes & Yes & Yes \\
+~~Dem. President $\times \bar D_{it}$ & No & Yes & Yes & Yes & Yes & Yes & Yes \\
+~~Oil Price $\times \bar D_{it}$ & No & Yes & Yes & Yes & Yes & Yes & Yes \\
+~~Temp. and Percipitation & No & No & Yes & Yes & Yes & Yes & Yes \\
+~~Temp. and Percip. $\times \bar D_{it}$& No & No & Yes & Yes & Yes & Yes & Yes \\
+~~Total US military aid  & No & No & No & Yes & Yes & Yes & Yes \\
+~~Total US econ. aid & No & No & No & Yes & Yes & Yes & Yes \\
+~~Avg. cereal imports $\times$ year FE & No & No & No & No & Yes & Yes & Yes \\
+~~Avg. cereal prod. $\times$ year FE & No & No & No & No & Yes & Yes & Yes \\
+\hline
+\end{tabular}
+\label{2sls}
+\normalsize
+\caption{First stage estimates of the effect of lagged production on US wheat aid, as well as second stage estimates of the effect of food aid on conflict under different models. p-values are provided in parentheses.}
+\end{table}
+
+
 \section{Testing for Heteroscedasticity}
 \section{Testing for Endogeneity and Overidentification Assumption}
 \section{Conclusion and Further Work}
