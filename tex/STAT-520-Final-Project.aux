@@ -22,9 +22,9 @@
 \@writefile{lot}{\contentsline {table}{\numberline {1}{\ignorespaces Summary statistics for the main variables of interest in the analysis. }}{2}{table.1}}
 \newlabel{wheataidprod}{{2}{2}{Description of Dataset and Preliminary Analysis}{table.1}{}}
 \@writefile{lof}{\contentsline {figure}{\numberline {1}{\ignorespaces Total US Wheat Aid vs Lagged US Wheat Production by year}}{2}{figure.1}}
-\@writefile{toc}{\contentsline {section}{\numberline {3}Duplication of Regression Results}{2}{section.3}}
 \newlabel{warwheatprod}{{2}{3}{Description of Dataset and Preliminary Analysis}{figure.1}{}}
 \@writefile{lof}{\contentsline {figure}{\numberline {2}{\ignorespaces Frequency of War vs Lagged Wheat Production by Year}}{3}{figure.2}}
+\@writefile{toc}{\contentsline {section}{\numberline {3}Duplication of Regression Results}{3}{section.3}}
 \@writefile{toc}{\contentsline {subsection}{\numberline {3.1}OLS}{3}{subsection.3.1}}
 \newlabel{ols}{{3.1}{4}{OLS}{subsection.3.1}{}}
 \@writefile{lot}{\contentsline {table}{\numberline {2}{\ignorespaces OLS estimates of the effect of food aid on conflict under different models. p-values are provided in parentheses.}}{4}{table.2}}
@@ -32,5 +32,21 @@
 \newlabel{2sls}{{3.2}{5}{2SLS}{subsection.3.2}{}}
 \@writefile{lot}{\contentsline {table}{\numberline {3}{\ignorespaces First stage estimates of the effect of lagged production on US wheat aid, as well as second stage estimates of the effect of food aid on conflict under different models. p-values are provided in parentheses.}}{5}{table.3}}
 \@writefile{toc}{\contentsline {section}{\numberline {4}Testing for Heteroscedasticity}{5}{section.4}}
-\@writefile{toc}{\contentsline {section}{\numberline {5}Testing for Endogeneity and Overidentification Assumption}{5}{section.5}}
-\@writefile{toc}{\contentsline {section}{\numberline {6}Conclusion and Further Work}{5}{section.6}}
+\newlabel{model5resid}{{4}{6}{Testing for Heteroscedasticity}{section.4}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {3}{\ignorespaces Residual plots for OLS with model 5. There exists some evidence of heteroscedasicity from the Scale-Location and Residuals vs Fitted plots.}}{6}{figure.3}}
+\newlabel{model6resid}{{4}{6}{Testing for Heteroscedasticity}{figure.3}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {4}{\ignorespaces Residual plots for OLS with model 6. As with the residuals for model 5, there exists some evidence of heteroscedasicity from the Scale-Location and Residuals vs Fitted plots.}}{6}{figure.4}}
+\@writefile{lof}{\contentsline {figure}{\numberline {5}{\ignorespaces Residual plots for OLS with model 7. There is now clear evidence of heteroscedasiticty from both the Normal Q-Q plot and the Scale-Location plot.}}{7}{figure.5}}
+\newlabel{model7resid}{{5}{7}{Residual plots for OLS with model 7. There is now clear evidence of heteroscedasiticty from both the Normal Q-Q plot and the Scale-Location plot}{figure.5}{}}
+\newlabel{Breusch}{{4}{7}{Testing for Heteroscedasticity}{figure.5}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {4}{\ignorespaces Results of regressing squared OLS residuals against the explanatory variables in each of the three models. All three possess significant evidence of heteroscedasticity, whether from the extremely low p-value on the F-statistic for the regression, or for the extremely high value (and low p-value) for the Breusch-Pagan test statistic $nR^2$.}}{7}{table.4}}
+\newlabel{Breusch2s}{{4}{7}{Testing for Heteroscedasticity}{table.4}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {5}{\ignorespaces Results of regressing squared 2SLS residuals against the explanatory variables in each of the three models. All three possess significant evidence of heteroscedasticity, whether from the extremely low p-value on the F-statistic for the regression, or for the extremely high value (and low p-value) for the Breusch-Pagan test statistic $nR^2$.}}{7}{table.5}}
+\newlabel{HCstuff}{{4}{8}{Testing for Heteroscedasticity}{table.5}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {6}{\ignorespaces Comparision of original standard errors and p-values to heteroscedasticity-robust standard errors and p-values. Notice that the 2SLS estimates for model 5 are no longer significant. }}{8}{table.6}}
+\newlabel{Haussman}{{5}{8}{Testing for Endogeneity}{section.5}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {7}{\ignorespaces The (homoscedastic) test statistic from the Hausman test for endogeneity, and its p-value. There exists significant evidence for endogeneity in for both the intrastate and all conflict variable, but not for the intrastate model. }}{8}{table.7}}
+\@writefile{toc}{\contentsline {section}{\numberline {5}Testing for Endogeneity}{8}{section.5}}
+\newlabel{HaussmanHC}{{5}{8}{Testing for Endogeneity}{table.7}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {8}{\ignorespaces The (heteroscedasticity-robust, using HC1) test statistic from the Hausman test for endogeneity, and its p-value. Note that the results are very similar exists significant evidence for endogeneity in for both the intrastate and all conflict variable, but not for the intrastate model. }}{8}{table.8}}
+\@writefile{toc}{\contentsline {section}{\numberline {6}Conclusion and Future work}{9}{section.6}}
